@@ -31,7 +31,7 @@ def get_weather(city):
 # AI CHAT (GEMINI)
 # -------------------
 def ask_ai(prompt):
-    model = genai.GenerativeModel("gemini-1.5-flash")
+    model = genai.GenerativeModel("gemini-3.8-flash")
     response = model.generate_content(prompt)
     return response.text
 
