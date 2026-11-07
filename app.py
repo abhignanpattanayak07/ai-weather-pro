@@ -31,15 +31,16 @@ def get_weather(city):
 def ask_ai(prompt):
     try:
         client = OpenAI(
-            base_url="https://models.github.ai/inference",
-            api_key=st.secrets["GITHUB_TOKEN"],
+            base_url="https://openrouter.ai/api/v1",
+            api_key=st.secrets["OPENROUTER_API_KEY"],
         )
         response = client.chat.completions.create(
             messages=[
                 {"role": "system", "content": "You are a helpful AI weather assistant."},
                 {"role": "user", "content": prompt}
             ],
-            model="openai/gpt-4o-mini",
+            # OpenRouter hosts several dedicated free models without billing requirements
+            model="meta-llama/llama-3.1-8b-instruct:free",
             temperature=0.7
         )
         return response.choices[0].message.content
