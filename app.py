@@ -31,7 +31,7 @@ def get_weather(city):
 def ask_ai(prompt):
     try:
         client = OpenAI(
-            base_url="https://models.inference.ai.azure.com",
+            base_url="https://models.github.ai/inference",
             api_key=st.secrets["GITHUB_TOKEN"],
         )
         response = client.chat.completions.create(
@@ -39,7 +39,7 @@ def ask_ai(prompt):
                 {"role": "system", "content": "You are a helpful AI weather assistant."},
                 {"role": "user", "content": prompt}
             ],
-            model="gpt-4o-mini",
+            model="openai/gpt-4o-mini",
             temperature=0.7
         )
         return response.choices[0].message.content
