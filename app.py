@@ -4,16 +4,14 @@ import os
 import pandas as pd
 import plotly.express as px
 from dotenv import load_dotenv
-import google.generativeai as genai
+import streamlit as st
+from openai import OpenAI
 
 # -------------------
 # LOAD ENV
 # -------------------
 load_dotenv()
 WEATHER_API = os.getenv("WEATHER_API")
-GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
-
-genai.configure(api_key=GOOGLE_API_KEY)
 
 st.set_page_config(page_title="Weather Pro AI", page_icon="🌦️", layout="wide")
 
@@ -31,9 +29,22 @@ def get_weather(city):
 # AI CHAT (GEMINI)
 # -------------------
 def ask_ai(prompt):
-    model = genai.GenerativeModel("gemini-3.8-flash")
-    response = model.generate_content(prompt)
-    return response.text
+    try:
+        client = OpenAI(
+            base_url="https://models.inference.ai.azure.com",
+            api_key=st.secrets["GITHUB_TOKEN"],
+        )
+        response = client.chat.completions.create(
+            messages=[
+                {"role": "system", "content": "You are a helpful AI weather assistant."},
+                {"role": "user", "content": prompt}
+            ],
+            model="gpt-4o-mini",
+            temperature=0.7
+        )
+        return response.choices[0].message.content
+    except Exception as e:
+        return f"API Error: {e}"
 
 # -------------------
 # UI
